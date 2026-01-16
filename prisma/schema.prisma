@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -20,13 +20,26 @@ model Usuarios {
   // Relaciones
   Rol                       Rol                       @relation(fields: [rol_id], references: [id])
   Integraciones             Integraciones_Log[]
-  EvaluacionesComoEvaluador Evaluacion[]              @relation("EvaluadorRelation")
-  EvaluacionesAprobadas     Evaluacion[]              @relation("AprobadoRelation")
+  EvaluacionesComoEvaluador Evaluaciones_Adopcion[]   @relation("EvaluadorRelation")
+  EvaluacionesAprobadas     Evaluaciones_Adopcion[]   @relation("AprobadoRelation")
   Desparacitaciones         Desparasitaciones[]
   Adopciones                Adopciones[]
   Seguimiento_Adopciones    Seguimientos_Adopciones[]
   Mordeduras                Mordeduras[]
   Esterilizaciones          Esterilizaciones[]
+  Vacunaciones              Vacunaciones[]
+  Animal                    Animales[]
+  Inventario_Medicamentos   Inventario_Medicamentos[]
+  Inventario_Alimentos      Inventario_Alimento[]
+  Movimientos_Inventario    Movimientos_Inventario[]
+  Auditoria                 Auditoria[]
+  Consultas_Veterinarias    Consultas_Veterinarias[]
+  Reporte_Seguimiento       Reporte_Seguimiento[]
+
+  @@index([rol_id])
+  @@index([estatus_usuario])
+  @@index([ultimo_acceso])
+  @@index([username])
 }
 
 model Rol {
@@ -50,7 +63,14 @@ model Reportes_Ciudadanos {
   asignado_a      String
 
   // Relaciones
-  Colonia Cat_Colonias @relation(fields: [colonia_id], references: [colonia_id])
+  Colonia             Cat_Colonias          @relation(fields: [colonia_id], references: [colonia_id])
+  Reporte_Seguimiento Reporte_Seguimiento[]
+
+  @@index([colonia_id])
+  @@index([estatus_reporte])
+  @@index([prioridad])
+  @@index([fecha_reporte])
+  @@index([asignado_a])
 }
 
 model Integraciones_Log {
@@ -63,6 +83,11 @@ model Integraciones_Log {
 
   // Relaciones
   Usuarios Usuarios @relation(fields: [usuarios_id], references: [usuario_id])
+
+  @@index([usuarios_id])
+  @@index([fecha_integracion])
+  @@index([sistema_externo])
+  @@index([exitoso])
 }
 
 model Vacunaciones {
@@ -77,6 +102,11 @@ model Vacunaciones {
   Animal   Animales           @relation(fields: [animal_id], references: [animal_id])
   Usuarios Usuarios           @relation(fields: [veterinario_Id], references: [usuario_id])
   Vacuna   Inventario_Vacunas @relation(fields: [vacuna_id], references: [id])
+
+  @@index([animal_id])
+  @@index([vacuna_id])
+  @@index([veterinario_Id])
+  @@index([fecha_aplicacion])
 }
 
 model Animales {
@@ -97,22 +127,33 @@ model Animales {
   es_adoptable              Boolean
   disponible_adopcion       Boolean
   fecha_disponible_adopcion DateTime
-  autorizado_adopcion_por   Int
+  autorizado_adopcion_por   String   @db.Uuid
 
   // Relaciones
-  Razas                 Cat_Razas               @relation(fields: [raza_id], references: [id])
-  Propietario           Propietario             @relation(fields: [propietario_id], references: [propietario_id])
-  Usuarios              Usuarios                @relation(fields: [autorizado_adopcion_por], references: [usuario_id])
-  Evaluaciones_Adopcion Evaluaciones_Adopcion[]
-  Desparacitaciones     Desparasitaciones[]
-  Egresos_Animales      Egresos_Animales[]
-  Adopciones            Adopciones[]
-  Ingresos_Animales     Ingresos_Animales[]
-  Animales_Fotos        Animales_Fotos[]
-  Animales_Documentos   Animales_Documentos[]
-  Mordeduras            Mordeduras[]
-  Defunciones           Defunciones[]
-  Esterilizaciones      Esterilizaciones[]
+  Razas                  Cat_Razas                @relation(fields: [raza_id], references: [id])
+  Propietario            Propietario              @relation(fields: [propietario_id], references: [propietario_id])
+  Usuarios               Usuarios                 @relation(fields: [autorizado_adopcion_por], references: [usuario_id])
+  Evaluaciones_Adopcion  Evaluaciones_Adopcion[]
+  Desparacitaciones      Desparasitaciones[]
+  Egresos_Animales       Egresos_Animales[]
+  Adopciones             Adopciones[]
+  Ingresos_Animales      Ingresos_Animales[]
+  Animales_Fotos         Animales_Fotos[]
+  Animales_Documentos    Animales_Documentos[]
+  Mordeduras             Mordeduras[]
+  Defunciones            Defunciones[]
+  Esterilizaciones       Esterilizaciones[]
+  Vacunaciones           Vacunaciones[]
+  Consultas_Veterinarias Consultas_Veterinarias[]
+
+  @@index([raza_id])
+  @@index([propietario_id])
+  @@index([estatus_animal])
+  @@index([es_adoptable])
+  @@index([disponible_adopcion])
+  @@index([fecha_ingreso])
+  @@index([fecha_disponible_adopcion])
+  @@index([autorizado_adopcion_por])
 }
 
 model Propietario {
@@ -136,6 +177,7 @@ model Propietario {
   Historial_Servicios_Propietario Historial_Servicios_Propietario[]
   Pago_Servicios                  Pagos_Servicios[]
   Esterilizaciones                Esterilizaciones[]
+  Animal                          Animales[]
 }
 
 model Cat_Razas {
@@ -143,6 +185,8 @@ model Cat_Razas {
   especie_animal  String
   nombre_raza     String
   estatus_general String
+
+  Animal Animales[]
 }
 
 model Inventario_Vacunas {
@@ -153,7 +197,8 @@ model Inventario_Vacunas {
   cantidad_disponible String
 
   // Relaciones
-  Tipo_Vacuna Cat_Tipos_Vacuna @relation(fields: [tipo_vacuna_id], references: [tipo_vacuna_id])
+  Tipo_Vacuna  Cat_Tipos_Vacuna @relation(fields: [tipo_vacuna_id], references: [tipo_vacuna_id])
+  Vacunaciones Vacunaciones[]
 }
 
 model Inventario_Medicamentos {
@@ -231,7 +276,7 @@ model Evaluaciones_Adopcion {
 
   // Relaciones
   Animal    Animales @relation(fields: [animal_id], references: [animal_id])
-  Evaluador Usuarios @relation("EvaluadorRelation", fields: [evaluacion_id], references: [usuario_id])
+  Evaluador Usuarios @relation("EvaluadorRelation", fields: [evaluador_id], references: [usuario_id])
   Aprobado  Usuarios @relation("AprobadoRelation", fields: [aprobado_por], references: [usuario_id])
 }
 
@@ -407,13 +452,16 @@ model Cat_Tipos_Vacuna {
   nombre_vacuna  String
   especie_animal String
   obligatoria    Boolean
+
+  // Relaciones
+  Inventario_Vacunas Inventario_Vacunas[]
 }
 
 model Reporte_Seguimiento {
   seguimiento_id          Int    @id @default(autoincrement())
   reporte_id              Int
   tipo_accion_seguimiento String
-  responsable_id          String
+  responsable_id          String @db.Uuid
 
   // Relaciones
   Reporte Reportes_Ciudadanos @relation(fields: [reporte_id], references: [reporte_id])

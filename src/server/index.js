@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 
+// SICA
+import animales from "../routes/animals/animal.routes.js"
+
+// App
 const app = express();
 
 // Puerto
@@ -27,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 // Rutas
+app.use("/animals", animales)
 
 // Endpoint para validar la actividad del server
 app.use("serverAlive", (req, res) => {
