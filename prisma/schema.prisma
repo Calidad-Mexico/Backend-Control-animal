@@ -112,29 +112,26 @@ model Vacunaciones {
 }
 
 model Animales {
-  animal_id                 Int      @id @default(autoincrement())
-  folio_interno             String   @unique
-  microchip                 String   @unique
-  medalla                   String   @unique
-  nombre                    String
-  especie_animal            String
-  raza_id                   Int
-  sexo_animal               String
-  edad_aproximada           Int
-  peso_kg                   Int
-  tamano_animal             Int
-  temperamento_animal       String
-  propietario_id            String   @db.Uuid
-  estatus_animal            String
-  fecha_ingreso             DateTime @default(now())
-  es_adoptable              Boolean
-  disponible_adopcion       Boolean
-  fecha_disponible_adopcion DateTime
-  autorizado_adopcion_por   String   @db.Uuid
+  animal_id        Int    @id @default(autoincrement())
+  nombre           String
+  especie          String
+  Raza             String
+  edad             String
+  pelaje           String
+  peso             Int
+  numero_microchip String
+  tipo_ingreso     String
+  ubicacion_actual String
+  estado_salud     String
+  sexo             String
+  observaciones    String
+
+  // aparte
+  fecha_ingreso           String
+  es_adoptable            Boolean
+  autorizado_adopcion_por String  @db.Uuid
 
   // Relaciones
-  Razas                  Cat_Razas                @relation(fields: [raza_id], references: [id])
-  Propietario            Propietario              @relation(fields: [propietario_id], references: [propietario_id])
   Usuarios               Usuarios                 @relation(fields: [autorizado_adopcion_por], references: [usuario_id])
   Evaluaciones_Adopcion  Evaluaciones_Adopcion[]
   Desparacitaciones      Desparasitaciones[]
@@ -149,13 +146,9 @@ model Animales {
   Vacunaciones           Vacunaciones[]
   Consultas_Veterinarias Consultas_Veterinarias[]
 
-  @@index([raza_id])
-  @@index([propietario_id])
-  @@index([estatus_animal])
+  // Avisar Alan
   @@index([es_adoptable])
-  @@index([disponible_adopcion])
   @@index([fecha_ingreso])
-  @@index([fecha_disponible_adopcion])
   @@index([autorizado_adopcion_por])
 }
 
@@ -180,15 +173,13 @@ model Propietario {
   Historial_Servicios_Propietario Historial_Servicios_Propietario[]
   Pago_Servicios                  Pagos_Servicios[]
   Esterilizaciones                Esterilizaciones[]
-  Animal                          Animales[]
 }
 
+// Sin uso
 model Cat_Razas {
   id             Int    @id @default(autoincrement())
   especie_animal String
   nombre_raza    String
-
-  Animal Animales[]
 }
 
 model Inventario_Vacunas {

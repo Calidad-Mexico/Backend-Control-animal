@@ -40,93 +40,74 @@ const getAnimalsByID = async (req, res) => {
     }
 }
 
-const createAnimals = async (req, res) => {
-    const {
-        folio_interno,
-        microchip,
-        nombre,
-        especie_animal,
-        raza_id,
-        sexo_animal,
-        edad_aproximada,
-        peso_kg,
-        tamano_animal,
-        temperamento_animal,
-        propietario_id,
-        estatus_animal,
-        es_adoptable,
-        disponible_adopcion,
-        fecha_disponible_adopcion,
-        autorizado_adopcion_por
-    } = req.body;
-
+const createAnimal = async (req, res) => {
     try {
-        // Validar duplicados (indices UNIQUE)
-        const exists = await prisma.animales.findFirst({
+        const {
+            nombre,
+            especie,
+            Raza,
+            edad,
+            pelaje,
+            peso,
+            numero_microchip,
+            tipo_ingreso,
+            ubicacion_actual,
+            estado_salud,
+            sexo,
+            observaciones,
+            fecha_ingreso,
+            es_adoptable,
+            autorizado_adopcion_por,
+        } = req.body;
+
+        // Validar relacion con el usuario que lo crea
+        const usuario = await prisma.usuarios.findUnique({
             where: {
-                OR: [
-                    { folio_interno },
-                    { microchip }
-                ]
-            }
+                usuario_id: autorizado_adopcion_por,
+            },
         });
 
-        if (exists) {
-            return res.status(409).json({
-                message: "Ya existe un animal con ese folio o microchip"
+        if (!usuario) {
+            return res.status(404).json({
+                message: "El usuario autorizador no existe",
             });
         }
 
-        // Crear animal
         const animal = await prisma.animales.create({
             data: {
-                folio_interno,
-                microchip,
                 nombre,
-                especie_animal,
-                raza_id: Number(raza_id),
-                sexo_animal,
-                edad_aproximada: Number(edad_aproximada),
-                peso_kg: Number(peso_kg),
-                tamano_animal: Number(tamano_animal),
-                temperamento_animal,
-                propietario_id,
-                estatus_animal,
+                especie,
+                Raza,
+                edad,
+                pelaje,
+                peso: Number(peso),
+                numero_microchip,
+                tipo_ingreso,
+                ubicacion_actual,
+                estado_salud,
+                sexo,
+                observaciones: observaciones || "",
+                fecha_ingreso,
                 es_adoptable: Boolean(es_adoptable),
-                disponible_adopcion: Boolean(disponible_adopcion),
-                fecha_disponible_adopcion: fecha_disponible_adopcion
-                    ? new Date(fecha_disponible_adopcion)
-                    : null,
-                autorizado_adopcion_por
-            }
+                autorizado_adopcion_por,
+            },
         });
-
-        if (!animal) {
-            return res.status(404).json({ message: "No se pudo crear el animal"})
-        }
 
         return res.status(201).json({
             message: "Animal creado correctamente",
-            data: animal
+            animal,
         });
-
     } catch (error) {
-        // Errores comunes Prisma
+        console.error("Error al crear animal:", error);
+
+        // Error por campo unique (si luego lo agregas)
         if (error.code === "P2002") {
             return res.status(409).json({
-                message: "Registro duplicado (folio o microchip)"
+                message: "El número de microchip ya existe",
             });
         }
 
-        if (error.code === "P2003") {
-            return res.status(400).json({
-                message: "Relación inválida (raza, propietario o usuario no existe)"
-            });
-        }
-
-        return res.status(500).json({
-            message: "Error interno del servidor"
-        });
+        return res.status(500).json({ message: "Error interno del servidor",  error: error.message });
     }
 };
 
@@ -159,6 +140,6 @@ const deleteAnimals = async (req, res) => {
 export {
     getAnimals,
     getAnimalsByID,
-    createAnimals,
+    createAnimal,
     deleteAnimals
 }

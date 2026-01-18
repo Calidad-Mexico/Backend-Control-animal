@@ -5,12 +5,15 @@ import cors from 'cors';
 import animales from "../routes/animals/animal.routes.js"
 import vaccinations from "../routes/vaccionations/vaccinations.routes.js"
 import consultations from "../routes/consultations/consultations.routes.js"
+import razas from "../routes/breeds/breeds.routes.js"
+import usuarios from "../routes/admin/users/users.routes.js"
+import roles from "../routes/admin/rol/rol.routes.js"
 
 // App
 const app = express();
 
 // Puerto
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3002);
 
 // Configuraciones del cors
 const corsOptions = {
@@ -33,12 +36,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 // Rutas
-app.use("/animals", animales)
-app.use("/vaccinations", vaccinations)
-app.use("/consultations")
+app.use("/sica", animales, vaccinations, consultations, razas, usuarios, roles);
 
 // Endpoint para validar la actividad del server
-app.use("serverAlive", (req, res) => {
+app.use("/serverAlive", (req, res) => {
     res.status(200).json({ message: `Servidor corriendo en el puerto ${app.get("port")}` })
 })
 
