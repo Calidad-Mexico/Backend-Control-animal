@@ -27,12 +27,11 @@ const getPropietarioById = async (req, res) => {
     }
 
     try {
-        const propietario = await prisma.propietario.findUnique({
+        const propietario = await prisma.propietario.findFirst({
             where: {
                 OR: [
                     // Busqueda exactas
                     { numero_identificacion: search },
-                    { propietario_id: search },
 
                     // Busqueda parcial
                     { nombre: { contains: search, mode: "insensitive" }},
