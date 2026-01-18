@@ -24,7 +24,7 @@ const getDeathsById = async (req, res) => {
 
     try {
         const deaths = await prisma.defunciones.findUnique({
-            where: { cremacion_id: id }
+            where: { defuncion_id: Number(id) }
         })
 
         if (!deaths) {

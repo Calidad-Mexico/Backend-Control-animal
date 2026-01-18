@@ -13,6 +13,7 @@ import reportes from "../routes/reports/reportes.routes.js"
 import esterilizaciones from "../routes/services/esterilizaciones.routes.js"
 import propietarios from "../routes/owners/propietarios.routes.js"
 import adopciones from "../routes/adoption/adoption.routes.js"
+import cremaciones from "../routes/deaths/deaths.routes.js"
 
 // App
 const app = express();
@@ -52,7 +53,8 @@ app.use("/sica",
     reportes,
     esterilizaciones,
     propietarios,
-    adopciones
+    adopciones,
+    cremaciones
 );
 
 // Endpoint para validar la actividad del server
