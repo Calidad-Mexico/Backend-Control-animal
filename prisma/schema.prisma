@@ -183,14 +183,15 @@ model Cat_Razas {
 }
 
 model Inventario_Vacunas {
-  id                  Int    @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   nombre_vacuna       String
-  tipo_vacuna_id      Int
   lote                String
-  cantidad_disponible String
+  cantidad_disponible Int
+  unidad_medida       String
+  fecha_vencimiento   DateTime
+  stock_alerta        Int
 
   // Relaciones
-  Tipo_Vacuna  Cat_Tipos_Vacuna @relation(fields: [tipo_vacuna_id], references: [tipo_vacuna_id])
   Vacunaciones Vacunaciones[]
 }
 
@@ -448,17 +449,6 @@ model Esterilizaciones {
   Animal      Animales    @relation(fields: [animal_id], references: [animal_id])
   Propietario Propietario @relation(fields: [propietario_id], references: [propietario_id])
   Veterinario Usuarios    @relation(fields: [veterinario_cirujano_id], references: [usuario_id])
-}
-
-model Cat_Tipos_Vacuna {
-  tipo_vacuna_id Int     @id @default(autoincrement())
-  codigo_vacuna  String
-  nombre_vacuna  String
-  especie_animal String
-  obligatoria    Boolean
-
-  // Relaciones
-  Inventario_Vacunas Inventario_Vacunas[]
 }
 
 model Reporte_Seguimiento {
