@@ -6,27 +6,6 @@ const getVaccinations = async (req, res) => {
             orderBy: {
                 fecha_aplicacion: "desc"
             },
-            include: {
-                Animal: {
-                    select: {
-                        animal_id: true,
-                        nombre: true,
-                        especie_animal: true
-                    }
-                },
-                Vacuna: {
-                    select: {
-                        id: true,
-                        nombre_vacuna: true
-                    }
-                },
-                Usuarios: {
-                    select: {
-                        usuario_id: true,
-                        nombre_completo: true
-                    }
-                }
-            }
         });
 
         return res.status(200).json(vaccinations);
