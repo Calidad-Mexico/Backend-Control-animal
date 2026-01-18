@@ -12,7 +12,8 @@ const login = async (req, res) => {
                 nombre_completo: true,
                 estatus_usuario: true,
                 ultimo_acceso: true,
-                password: true
+                password: true,
+                usuario_id: true
             }
         })
 

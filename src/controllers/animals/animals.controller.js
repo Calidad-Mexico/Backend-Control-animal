@@ -24,17 +24,16 @@ const getAnimalsByID = async (req, res) => {
         return res.status(404).json({ message: "Faltan datos de busqueda" })
     }
 
+    const id = Number(search)
+    const orConditions = [
+        { numero_microchip: search },
+        { nombre: { contains: search, mode: "insensitive" } },
+    ]
+
     try {
         const animal = await prisma.animales.findFirst({
             where: {
-                OR: [
-                    // Busqueda exacta por microchip
-                    { numero_microchip: search },
-                    { animal_id: Number(search) },
-
-                    // Busqueda parcial por nombre
-                    { nombre: { contains: search, mode: "insensitive" } },
-                ]
+                OR: orConditions,
             },
         })
 
