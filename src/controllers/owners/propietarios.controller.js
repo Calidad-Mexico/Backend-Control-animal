@@ -43,9 +43,7 @@ const getPropietarioById = async (req, res) => {
                 Adopciones: {
                     select: {
                         adopcion_id: true,
-                        folio_adopcion: true,
-                        fecha_solicitud: true,
-                        estatus_adopcion: true
+                        fecha_adopcion: true
                     }
                 },
                 Esterilizaciones: {
