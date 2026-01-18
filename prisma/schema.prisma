@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_DEV")
 }
 
 model Usuarios {
@@ -424,11 +424,16 @@ model Defunciones {
 }
 
 model Cremaciones {
-  cremacion_id            Int      @id @default(autoincrement())
-  defuncion_id            Int
-  tipo_servicio_cremacion String
-  fecha_recepcion         DateTime
-  estatus_cremacion       String
+  cremacion_id         Int      @id @default(autoincrement())
+  defuncion_id         Int
+  fecha_hora_cremacion DateTime
+  numero_cremacion     String
+  peso                 String
+  operador_horno       String   @db.Uuid
+  temperatura          String
+  duracion             Int
+  entrega_cenizas      String
+  observaciones        String
 
   // Relaciones
   Defuncion Defunciones @relation(fields: [defuncion_id], references: [defuncion_id])
@@ -461,6 +466,16 @@ model Reporte_Seguimiento {
   // Relaciones
   Reporte Reportes_Ciudadanos @relation(fields: [reporte_id], references: [reporte_id])
   Usuario Usuarios            @relation(fields: [responsable_id], references: [usuario_id])
+}
+
+model Folio_Seguimiento {
+  id        Int      @id @default(autoincrement())
+  tipo      String
+  anio      Int
+  ultimo    Int
+  updatedAt DateTime @updatedAt
+
+  @@unique([tipo, anio])
 }
 
 model Cat_Colonias {

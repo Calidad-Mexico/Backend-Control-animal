@@ -13,7 +13,8 @@ import reportes from "../routes/reports/reportes.routes.js"
 import esterilizaciones from "../routes/services/esterilizaciones.routes.js"
 import propietarios from "../routes/owners/propietarios.routes.js"
 import adopciones from "../routes/adoption/adoption.routes.js"
-import cremaciones from "../routes/deaths/deaths.routes.js"
+import defunciones from "../routes/deaths/deaths.routes.js"
+import cremaciones from "../routes/cremations/cremations.routes.js"
 
 // App
 const app = express();
@@ -54,6 +55,7 @@ app.use("/sica",
     esterilizaciones,
     propietarios,
     adopciones,
+    defunciones,
     cremaciones
 );
 
