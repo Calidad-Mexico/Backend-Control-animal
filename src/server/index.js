@@ -5,7 +5,6 @@ import cors from 'cors';
 import animales from "../routes/animals/animal.routes.js"
 import vaccinations from "../routes/vaccionations/vaccinations.routes.js"
 import consultations from "../routes/consultations/consultations.routes.js"
-import razas from "../routes/breeds/breeds.routes.js"
 import usuarios from "../routes/admin/users/users.routes.js"
 import roles from "../routes/admin/rol/rol.routes.js"
 
