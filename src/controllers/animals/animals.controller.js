@@ -153,7 +153,7 @@ const updateAnimal = async (req, res) => {
             "es_adoptable"
         ];
 
-        const intFields = ["peso", "edad"]
+        const intFields = ["peso"]
         const booleanFields = ["es_adoptable"]
         const data = {};
 
