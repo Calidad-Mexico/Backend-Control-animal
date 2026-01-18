@@ -12,6 +12,7 @@ import alimentos from "../routes/inventory/alimentos.routes.js"
 import reportes from "../routes/reports/reportes.routes.js"
 import esterilizaciones from "../routes/services/esterilizaciones.routes.js"
 import propietarios from "../routes/owners/propietarios.routes.js"
+import adopciones from "../routes/adoption/adoption.routes.js"
 
 // App
 const app = express();
@@ -40,7 +41,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 
 // Rutas
-app.use("/sica", animales, vaccinations, consultations, usuarios, roles, medicamentos, alimentos, reportes, esterilizaciones, propietarios);
+app.use("/sica",
+    animales,
+    vaccinations,
+    consultations,
+    usuarios,
+    roles,
+    medicamentos,
+    alimentos,
+    reportes,
+    esterilizaciones,
+    propietarios,
+    adopciones
+);
 
 // Endpoint para validar la actividad del server
 app.use("/serverAlive", (req, res) => {
