@@ -118,9 +118,6 @@ const createReporteSeguimiento = async (req, res) => {
         responsable_id,
     } = req.body;
 
-    console.log("responsable_id", responsable_id);
-
-
     // Validación de campos requeridos
     if (!reporte_id || !tipo_accion_seguimiento || !responsable_id) {
         return res.status(400).json({
