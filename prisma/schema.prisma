@@ -408,10 +408,15 @@ model Pagos_Servicios {
 }
 
 model Defunciones {
-  defuncion_id         Int      @id @default(autoincrement())
-  animal_id            Int
-  fecha_hora_defuncion DateTime
-  causa_muerte         String
+  defuncion_id            Int      @id @default(autoincrement())
+  animal_id               Int
+  fecha_hora_defuncion    DateTime
+  lugar_defuncion         String
+  causa_muerte            String
+  veterinario_responsable String
+  autopsia                Boolean
+  disposicion_cadaver     String
+  observaciones           String
 
   // Relaciones
   Animal      Animales      @relation(fields: [animal_id], references: [animal_id])
@@ -420,7 +425,6 @@ model Defunciones {
 
 model Cremaciones {
   cremacion_id            Int      @id @default(autoincrement())
-  folio_cremacion         String   @unique
   defuncion_id            Int
   tipo_servicio_cremacion String
   fecha_recepcion         DateTime
