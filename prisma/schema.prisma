@@ -199,6 +199,7 @@ model Inventario_Medicamentos {
   fecha_vencimiento    DateTime
   cantidad_disponibles Int
   unidad_medida        Int
+  stock_alerta         Int
   registrado_por       String   @db.Uuid
 
   // Relaciones
@@ -211,6 +212,7 @@ model Inventario_Alimento {
   tipo_alimento          String
   fecha_vencimiento      DateTime
   cantidad_disponible_kg Int
+  stock_alerta           Int
   registrado_por         String   @db.Uuid
 
   // Relaciones
@@ -223,6 +225,7 @@ model Inventario_Insumos {
   cantidad_disponible Int
   unidad_medida       String
   fecha_vencimiento   DateTime
+  stock_alerta        Int
   registrado_por      String   @db.Uuid
 
   // Relaciones

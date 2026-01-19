@@ -33,7 +33,8 @@ const createAlimento = async (req, res) => {
         tipo_alimento,
         fecha_vencimiento,
         cantidad_disponible_kg,
-        registrado_por
+        registrado_por,
+        stock_alerta
     } = req.body;
 
     // Validación de campos requeridos
@@ -50,7 +51,8 @@ const createAlimento = async (req, res) => {
                 tipo_alimento,
                 fecha_vencimiento: new Date(fecha_vencimiento),
                 cantidad_disponible_kg: Number(cantidad_disponible_kg),
-                registrado_por
+                registrado_por,
+                stock_alerta: Number(stock_alerta),
             },
             include: {
                 Usuarios: {

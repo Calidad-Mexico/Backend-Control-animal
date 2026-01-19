@@ -44,7 +44,8 @@ const createSupplies = async (req, res) => {
         cantidad_disponible,
         unidad_medida,
         fecha_vencimiento,
-        registrado_por
+        registrado_por,
+        stock_alerta
     } = req.body
 
     // Objeto de datos de los insumos
@@ -53,7 +54,8 @@ const createSupplies = async (req, res) => {
         cantidad_disponible: Number(cantidad_disponible),
         unidad_medida,
         fecha_vencimiento: new Date(fecha_vencimiento),
-        registrado_por
+        registrado_por,
+        stock_alerta: Number(stock_alerta)
     }
 
     try {

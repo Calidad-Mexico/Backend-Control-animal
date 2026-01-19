@@ -33,7 +33,8 @@ const createMedicamento = async (req, res) => {
         fecha_vencimiento,
         cantidad_disponibles,
         unidad_medida,
-        registrado_por
+        registrado_por,
+        stock_alerta
     } = req.body;
 
     // Validación de campos requeridos
@@ -50,7 +51,8 @@ const createMedicamento = async (req, res) => {
                 fecha_vencimiento: new Date(fecha_vencimiento),
                 cantidad_disponibles: Number(cantidad_disponibles),
                 unidad_medida: Number(unidad_medida),
-                registrado_por
+                registrado_por,
+                stock_alerta: Number(stock_alerta),
             },
             include: {
                 Usuarios: {
