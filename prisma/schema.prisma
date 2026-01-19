@@ -35,6 +35,7 @@ model Usuarios {
   Auditoria                 Auditoria[]
   Consultas_Veterinarias    Consultas_Veterinarias[]
   Reporte_Seguimiento       Reporte_Seguimiento[]
+  Inventario_Insumos        Inventario_Insumos[]
 
   @@index([rol_id])
   @@index([estatus_usuario])
@@ -118,6 +119,7 @@ model Animales {
   pelaje           String
   peso             Int
   numero_microchip String
+  medalla          String
   tipo_ingreso     String
   ubicacion_actual String
   estado_salud     String
@@ -138,7 +140,6 @@ model Animales {
   Ingresos_Animales      Ingresos_Animales[]
   Animales_Fotos         Animales_Fotos[]
   Animales_Documentos    Animales_Documentos[]
-  Mordeduras             Mordeduras[]
   Defunciones            Defunciones[]
   Esterilizaciones       Esterilizaciones[]
   Vacunaciones           Vacunaciones[]
@@ -166,7 +167,6 @@ model Propietario {
 
   // Relaciones
   Adopciones                      Adopciones[]
-  Mordeduras                      Mordeduras[]
   Propietario_Documentos          Propietario_Documentos[]
   Historial_Servicios_Propietario Historial_Servicios_Propietario[]
   Pago_Servicios                  Pagos_Servicios[]
@@ -212,6 +212,18 @@ model Inventario_Alimento {
   fecha_vencimiento      DateTime
   cantidad_disponible_kg Int
   registrado_por         String   @db.Uuid
+
+  // Relaciones
+  Usuarios Usuarios @relation(fields: [registrado_por], references: [usuario_id])
+}
+
+model Inventario_Insumos {
+  insumo_id           Int      @id @default(autoincrement())
+  nombre_producto     String
+  cantidad_disponible Int
+  unidad_medida       String
+  fecha_vencimiento   DateTime
+  registrado_por      String   @db.Uuid
 
   // Relaciones
   Usuarios Usuarios @relation(fields: [registrado_por], references: [usuario_id])
@@ -359,17 +371,26 @@ model Animales_Documentos {
 }
 
 model Mordeduras {
-  mordedura_id          Int      @id @default(autoincrement())
-  folio_mordedura       String   @unique
-  animal_id             Int
-  fecha_incidente       DateTime
-  propietario_animal_id String   @db.Uuid
-  registrador_por       String   @db.Uuid
+  mordedura_id       Int      @id @default(autoincrement())
+  folio_mordedura    String   @unique
+  nombre_completo    String
+  edad               Int
+  telefono           String
+  direccion          String
+  fecha_incidente    DateTime
+  hora               DateTime
+  gravedad           String
+  lugar_incidencia   String
+  parte_afectada     String
+  especie            String
+  animal_propio      Boolean
+  ID_animal          String?
+  estado_vacunacion  String
+  descripcion_animal String
+  registrador_por    String   @db.Uuid
 
   // Relaciones
-  Animal      Animales    @relation(fields: [animal_id], references: [animal_id])
-  Propietario Propietario @relation(fields: [propietario_animal_id], references: [propietario_id])
-  Usuarios    Usuarios    @relation(fields: [registrador_por], references: [usuario_id])
+  Usuarios Usuarios @relation(fields: [registrador_por], references: [usuario_id])
 }
 
 model Propietario_Documentos {

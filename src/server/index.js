@@ -15,6 +15,8 @@ import propietarios from "../routes/owners/propietarios.routes.js"
 import adopciones from "../routes/adoption/adoption.routes.js"
 import defunciones from "../routes/deaths/deaths.routes.js"
 import cremaciones from "../routes/cremations/cremations.routes.js"
+import insumos from "../routes/inventory/supplies.routes.js"
+import mordeduras from "../routes/bites/bites.routes.js"
 
 // App
 const app = express();
@@ -56,7 +58,9 @@ app.use("/sica",
     propietarios,
     adopciones,
     defunciones,
-    cremaciones
+    cremaciones,
+    insumos,
+    mordeduras
 );
 
 // Endpoint para validar la actividad del server
