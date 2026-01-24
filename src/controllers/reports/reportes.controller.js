@@ -94,6 +94,28 @@ const createReporte = async (req, res) => {
     }
 };
 
+const updateStatusReporte = async (req, res) => {
+    // Extraccion de datos del body
+    const { estatus_reporte, id } = req.body;
+
+    try {
+        const status = await prisma.reportes_Ciudadanos.update({
+            where: { reporte_id: Number(id) },
+            data: {
+                estatus_reporte
+            }
+        })
+
+        if (!status) {
+            return res.status(404).json({ message: "No se pudo actualizar el estatus del reporte" })
+        }
+
+        return res.status(200).json({ message: "Estatus del reporte actualizado exitosamente", status })
+    } catch (error) {
+        return res.status(500).json({ message: "Error al actualizar el estatus del reporte", error: error.message });
+    }
+}
+
 const createReporteSeguimiento = async (req, res) => {
     const {
         reporte_id,
@@ -161,6 +183,7 @@ const createReporteSeguimiento = async (req, res) => {
 export {
     getAllReportes,
     createReporte,
+    updateStatusReporte,
     createReporteSeguimiento
 };
 

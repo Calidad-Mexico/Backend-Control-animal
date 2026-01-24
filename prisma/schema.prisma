@@ -51,8 +51,8 @@ model Rol {
 }
 
 model Reportes_Ciudadanos {
-  reporte_id      Int      @id @default(autoincrement())
-  folio_reporte   String   @unique
+  reporte_id      Int             @id @default(autoincrement())
+  folio_reporte   String          @unique
   tipo_reporte    String
   prioridad       String
   descripcion     String
@@ -61,8 +61,8 @@ model Reportes_Ciudadanos {
   nombre_completo String
   telefono        String
   email           String?
-  estatus_reporte String
-  fecha_reporte   DateTime @default(now())
+  estatus_reporte Estatus_Reporte
+  fecha_reporte   DateTime        @default(now())
   registrado_por  String
 
   // Relaciones
@@ -519,6 +519,13 @@ model Cat_Colonias {
 
   // Relaciones
   Reportes_Ciudadanos Reportes_Ciudadanos[]
+}
+
+enum Estatus_Reporte {
+  Pendiente
+  EnProceso
+  Atendido
+  Cerrado
 }
 
 enum Estatus_Usuario {

@@ -2,6 +2,7 @@ import express from "express";
 import {
     getAllReportes,
     createReporte,
+    updateStatusReporte,
     createReporteSeguimiento
 } from "../../controllers/reports/reportes.controller.js";
 
@@ -11,6 +12,7 @@ const router = express();
 // Rutas
 router.get("/getAllReports", getAllReportes);
 router.post("/createReport", createReporte);
+router.put("/updateStatusReporte", updateStatusReporte);
 router.put("/createReporteSeguimiento", createReporteSeguimiento);
 
 export default router;
