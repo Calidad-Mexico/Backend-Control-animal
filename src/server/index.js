@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 // SICA
 import animales from "../routes/animals/animal.routes.js"
@@ -34,6 +35,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Rutas
 app.use("/sica", animales, vaccinations, consultations, razas, usuarios, roles);

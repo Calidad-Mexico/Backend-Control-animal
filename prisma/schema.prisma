@@ -112,27 +112,46 @@ model Vacunaciones {
 }
 
 model Animales {
-  animal_id        Int    @id @default(autoincrement())
-  nombre           String
-  especie          String
-  Raza             String
-  edad             String
-  pelaje           String
-  peso             Int
-  numero_microchip String
-  tipo_ingreso     String
-  ubicacion_actual String
-  estado_salud     String
-  sexo             String
-  observaciones    String
+  animal_id Int @id @default(autoincrement())
+
+  // Modelo animal 1
+  nombre_animal    String?
+  especie          String?
+  Raza             String?
+  edad             String?
+  pelaje           String?
+  peso             Int?
+  numero_microchip String?
+  tipo_ingreso     String?
+  ubicacion_actual String?
+  estado_salud     String?
+  sexo             String?
+  observaciones    String?
+
+  // Modelo animal 2
+  fecha_hora_ingreso        DateTime?
+  condicion_ingreso         String?
+  ubicacion_captura_rescate String?
+  colonia                   String?
+  responsable_captura       String?
+  motivo_ingreso            String?
+  // Alguien entrega
+  nombre                    String?
+  apellido_paterno          String?
+  apellido_materno          String?
+  tipo_identificacion       String?
+  numero_identificacion     String?
+  telefono                  String?
+  correo                    String?
+  relacion_animal           String?
 
   // aparte
-  fecha_ingreso           String
-  es_adoptable            Boolean
-  autorizado_adopcion_por String  @db.Uuid
+  fecha_ingreso  String?
+  es_adoptable   Boolean?
+  registrado_por String   @db.Uuid
 
   // Relaciones
-  Usuarios               Usuarios                 @relation(fields: [autorizado_adopcion_por], references: [usuario_id])
+  Usuarios               Usuarios                 @relation(fields: [registrado_por], references: [usuario_id])
   Evaluaciones_Adopcion  Evaluaciones_Adopcion[]
   Desparacitaciones      Desparasitaciones[]
   Egresos_Animales       Egresos_Animales[]
@@ -149,7 +168,18 @@ model Animales {
   // Avisar Alan
   @@index([es_adoptable])
   @@index([fecha_ingreso])
-  @@index([autorizado_adopcion_por])
+  @@index([registrado_por])
+}
+
+model Animales_Fotos {
+  id          Int     @id @default(autoincrement())
+  animal_id   Int
+  url         String
+  descripcion String?
+
+  Animales Animales @relation(fields: [animal_id], references: [animal_id])
+
+  @@index([animal_id])
 }
 
 model Propietario {
@@ -335,16 +365,6 @@ model Ingresos_Animales {
   animal_id          Int
   tipo_ingreso       String
   fecha_hora_ingreso DateTime
-
-  // Relaciones
-  Animal Animales @relation(fields: [animal_id], references: [animal_id])
-}
-
-model Animales_Fotos {
-  foto_id      Int     @id @default(autoincrement())
-  animal_id    Int
-  ruta_archivo String
-  es_principal Boolean
 
   // Relaciones
   Animal Animales @relation(fields: [animal_id], references: [animal_id])

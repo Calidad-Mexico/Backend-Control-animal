@@ -3,8 +3,10 @@ import {
     getAnimals,
     getAnimalsByID,
     createAnimal,
+    createAnimalFlujo,
     deleteAnimals
 } from "../../controllers/animals/animals.controller.js";
+import upload from "../../middlewares/multerConfigAnimals.js"
 
 // Router
 const router = express.Router()
@@ -12,7 +14,8 @@ const router = express.Router()
 // Rutas
 router.get("/getAnimals", getAnimals)
 router.get("/getAnimalByID/:id", getAnimalsByID)
-router.post("/createAnimal", createAnimal)
+router.post("/createAnimal", upload.array("fotos", 5), createAnimal)
+router.post("/createAnimalFlujo", upload.array("fotos", 5), createAnimalFlujo)
 router.delete("/deleteAnimals/:id", deleteAnimals)
 
 export default router

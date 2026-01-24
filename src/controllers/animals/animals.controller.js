@@ -2,7 +2,11 @@ import prisma from "../../../prisma/prismaClient.js"
 
 const getAnimals = async (req, res) => {
     try {
-        const animals = prisma.animales.findMany()
+        const animals = await prisma.animales.findMany({
+            include: {
+                Animales_Fotos: true
+            }
+        })
 
         if (!animals) {
             return res.status(404).json({ message: "No se pudieron obtener los animales"})
@@ -57,13 +61,13 @@ const createAnimal = async (req, res) => {
             observaciones,
             fecha_ingreso,
             es_adoptable,
-            autorizado_adopcion_por,
+            registrado_por,
         } = req.body;
 
         // Validar relacion con el usuario que lo crea
         const usuario = await prisma.usuarios.findUnique({
             where: {
-                usuario_id: autorizado_adopcion_por,
+                usuario_id: registrado_por,
             },
         });
 
@@ -89,9 +93,23 @@ const createAnimal = async (req, res) => {
                 observaciones: observaciones || "",
                 fecha_ingreso,
                 es_adoptable: Boolean(es_adoptable),
-                autorizado_adopcion_por,
+                registrado_por,
             },
         });
+
+        // Guardar fotos si se enviaron
+        if (req.files && req.files.length > 0) {
+            const fotosData = req.files.map((file, index) => ({
+                animal_id: animal.animal_id,
+                url: file.path.replace(/\\/g, "/"),
+            }))
+
+            const animalFotos = await prisma.animales_Fotos.createMany({
+                data: fotosData
+            })
+
+            console.log("Fotos creadas", animalFotos)
+        }
 
         return res.status(201).json({
             message: "Animal creado correctamente",
@@ -110,6 +128,76 @@ const createAnimal = async (req, res) => {
         return res.status(500).json({ message: "Error interno del servidor",  error: error.message });
     }
 };
+
+const createAnimalFlujo = async (req, res) => {
+    // Extraccion de los datos del body
+    const {
+        tipo_ingreso,
+        fecha_hora_ingreso,
+        condicion_ingreso,
+        ubicacion_captura_rescate,
+        colonia,
+        responsable_captura,
+        motivo_ingreso,
+        nombre,
+        apellido_paterno,
+        apellido_materno,
+        tipo_identificacion,
+        numero_identificacion,
+        telefono,
+        correo,
+        relacion_animal,
+        registrado_por
+    } = req.body;
+
+    // Objeto del animal
+    const animalData = {
+        tipo_ingreso,
+        fecha_hora_ingreso,
+        condicion_ingreso,
+        ubicacion_captura_rescate,
+        colonia,
+        responsable_captura,
+        motivo_ingreso,
+        nombre,
+        apellido_paterno,
+        apellido_materno,
+        tipo_identificacion,
+        numero_identificacion,
+        telefono,
+        correo,
+        relacion_animal,
+        registrado_por
+    }
+
+    try {
+        const animal = await prisma.animales.create({
+            data: animalData
+        })
+
+        if (!animal) {
+            return res.status(404).json({ message: "No se pudo crear el animal" })
+        }
+
+        // Guardar fotos si se enviaron
+        if (req.files && req.files.length > 0) {
+            const fotosData = req.files.map((file, index) => ({
+                animal_id: animal.animal_id,
+                url: file.path.replace(/\\/g, "/"),
+            }))
+
+            const animalFotos = await prisma.animales_Fotos.createMany({
+                data: fotosData
+            })
+
+            console.log("Fotos creadas", animalFotos)
+        }
+
+        return res.status(201).json({ message: "Animal creado exitosamente", animal })
+    } catch(error) {
+        return res.status(404).json({ message: error.message });
+    }
+}
 
 const deleteAnimals = async (req, res) => {
     // Obtener id de los parametros
@@ -141,5 +229,6 @@ export {
     getAnimals,
     getAnimalsByID,
     createAnimal,
+    createAnimalFlujo,
     deleteAnimals
 }
