@@ -186,6 +186,7 @@ model Animales_Fotos {
 
 model Propietario {
   propietario_id        String   @id @default(uuid()) @db.Uuid
+  folio_propietario     String   @unique
   tipo_identificacion   String
   numero_identificacion String   @unique
   nombre                String

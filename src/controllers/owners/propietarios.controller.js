@@ -1,4 +1,5 @@
 import prisma from "../../../prisma/prismaClient.js";
+import generateFolio from "../../helpers/generateFolio.js";
 
 const getAllPropietarios = async (req, res) => {
     try {
@@ -123,9 +124,12 @@ const createPropietario = async (req, res) => {
         });
     }
 
+    const folioUnicoProp = await generateFolio("PROP")
+
     try {
         const propietario = await prisma.propietario.create({
             data: {
+                folio_propietario: folioUnicoProp,
                 tipo_identificacion,
                 numero_identificacion,
                 nombre,
