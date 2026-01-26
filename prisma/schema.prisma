@@ -35,6 +35,7 @@ model Usuarios {
   Auditoria                 Auditoria[]
   Consultas_Veterinarias    Consultas_Veterinarias[]
   Reporte_Seguimiento       Reporte_Seguimiento[]
+  Cuarentenas               Cuarentenas[]
 
   @@index([rol_id])
   @@index([estatus_usuario])
@@ -167,6 +168,7 @@ model Animales {
   Esterilizaciones       Esterilizaciones[]
   Vacunaciones           Vacunaciones[]
   Consultas_Veterinarias Consultas_Veterinarias[]
+  Cuarentenas            Cuarentenas[]
 
   // Avisar Alan
   @@index([es_adoptable])
@@ -294,8 +296,32 @@ model Consultas_Veterinarias {
   fecha_hora_consulta DateTime @default(now())
 
   // Relaciones
-  Animal   Animales @relation(fields: [animal_id], references: [animal_id])
-  Usuarios Usuarios @relation(fields: [veterinario_id], references: [usuario_id])
+  Animal      Animales      @relation(fields: [animal_id], references: [animal_id])
+  Usuarios    Usuarios      @relation(fields: [veterinario_id], references: [usuario_id])
+  Cuarentenas Cuarentenas[]
+}
+
+model Cuarentenas {
+  cuarentena_id         Int      @id @default(autoincrement())
+  animal_id             Int
+  consulta_id           Int?
+  cantidad_dias         Int
+  fecha_inicio          DateTime @default(now())
+  fecha_fin_estimada    DateTime
+  estatus_cuarentena    Estatus_Cuarentena @default(Activa)
+  observaciones         String?
+  registrado_por        String   @db.Uuid
+
+  // Relaciones
+  Animal      Animales              @relation(fields: [animal_id], references: [animal_id])
+  Consulta    Consultas_Veterinarias? @relation(fields: [consulta_id], references: [consulta_id])
+  Usuarios    Usuarios              @relation(fields: [registrado_por], references: [usuario_id])
+
+  @@index([animal_id])
+  @@index([consulta_id])
+  @@index([registrado_por])
+  @@index([estatus_cuarentena])
+  @@index([fecha_inicio])
 }
 
 model Evaluaciones_Adopcion {
@@ -533,4 +559,10 @@ enum Estatus_Reporte {
 enum Estatus_Usuario {
   ACTIVO
   INACTIVO
+}
+
+enum Estatus_Cuarentena {
+  Activa
+  Finalizada
+  Cancelada
 }
