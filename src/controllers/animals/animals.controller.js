@@ -85,6 +85,8 @@ const createAnimal = async (req, res) => {
             });
         }
 
+        const booleanAdoptable = es_adoptable === true || es_adoptable === "true"
+
         const animal = await prisma.animales.create({
             data: {
                 nombre_animal,
@@ -101,7 +103,7 @@ const createAnimal = async (req, res) => {
                 sexo,
                 observaciones: observaciones || "",
                 fecha_ingreso,
-                es_adoptable: Boolean(es_adoptable),
+                es_adoptable: booleanAdoptable,
                 registrado_por,
             },
         });
