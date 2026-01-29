@@ -23,7 +23,7 @@ const getAnimalsByID = async (req, res) => {
     const { search } = req.params
 
     // Manejo de errores
-    if (!id) {
+    if (!search) {
         return res.status(404).json({ message: "Falta ID"})
     }
 
@@ -53,7 +53,7 @@ const getAnimalsByID = async (req, res) => {
 const createAnimal = async (req, res) => {
     try {
         const {
-            nombre,
+            nombre_animal,
             especie,
             Raza,
             edad,
@@ -86,7 +86,7 @@ const createAnimal = async (req, res) => {
 
         const animal = await prisma.animales.create({
             data: {
-                nombre,
+                nombre_animal,
                 especie,
                 Raza,
                 edad,

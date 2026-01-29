@@ -13,7 +13,7 @@ const router = express.Router()
 
 // Rutas
 router.get("/getAnimals", getAnimals)
-router.get("/getAnimalByID/:id", getAnimalsByID)
+router.get("/getAnimalByID/:search", getAnimalsByID)
 router.post("/createAnimal", upload.array("fotos", 5), createAnimal)
 router.post("/createAnimalFlujo", upload.array("fotos", 5), createAnimalFlujo)
 router.delete("/deleteAnimals/:id", deleteAnimals)

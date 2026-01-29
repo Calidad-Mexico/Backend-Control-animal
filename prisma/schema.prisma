@@ -302,20 +302,20 @@ model Consultas_Veterinarias {
 }
 
 model Cuarentenas {
-  cuarentena_id         Int      @id @default(autoincrement())
-  animal_id             Int
-  consulta_id           Int?
-  cantidad_dias         Int
-  fecha_inicio          DateTime @default(now())
-  fecha_fin_estimada    DateTime
-  estatus_cuarentena    Estatus_Cuarentena @default(Activa)
-  observaciones         String?
-  registrado_por        String   @db.Uuid
+  cuarentena_id      Int                @id @default(autoincrement())
+  animal_id          Int
+  consulta_id        Int?
+  cantidad_dias      Int
+  fecha_inicio       DateTime           @default(now())
+  fecha_fin_estimada DateTime
+  estatus_cuarentena Estatus_Cuarentena @default(Activa)
+  observaciones      String?
+  registrado_por     String             @db.Uuid
 
   // Relaciones
-  Animal      Animales              @relation(fields: [animal_id], references: [animal_id])
-  Consulta    Consultas_Veterinarias? @relation(fields: [consulta_id], references: [consulta_id])
-  Usuarios    Usuarios              @relation(fields: [registrado_por], references: [usuario_id])
+  Animal   Animales                @relation(fields: [animal_id], references: [animal_id])
+  Consulta Consultas_Veterinarias? @relation(fields: [consulta_id], references: [consulta_id])
+  Usuarios Usuarios                @relation(fields: [registrado_por], references: [usuario_id])
 
   @@index([animal_id])
   @@index([consulta_id])
