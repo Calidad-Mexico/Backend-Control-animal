@@ -27,16 +27,17 @@ const getAnimalsByID = async (req, res) => {
         return res.status(404).json({ message: "Falta ID"})
     }
 
+    const conditions = [
+        !isNaN(Number(search)) ? { animal_id: Number(search) } : null,
+        { nombre_animal: { contains: search, mode: "insensitive" } },
+        { numero_microchip: { contains: search, mode: "insensitive" } },
+        { medalla: { contains: search, mode: "insensitive" } },
+    ].filter(Boolean);
+
     try {
         const animal = await prisma.animales.findMany({
             where: {
-                OR: [
-                    { animal_id: Number(search) },
-
-                    { nombre_animal: { contains: search, mode: "insensitive" } },
-                    { numero_microchip: { contains: search, mode: "insensitive" } },
-                    { medalla: { contains: search, mode: "insensitive" } },
-                ]
+                OR: conditions
             },
         })
 
