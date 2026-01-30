@@ -45,6 +45,9 @@ const getAnimalsByID = async (req, res) => {
             where: {
                 OR: conditions
             },
+            include: {
+                Consultas_Veterinarias: true
+            }
         })
 
         if (!animal) {
