@@ -39,6 +39,7 @@ model Usuarios {
   Reporte_Ciudadano         Reportes_Ciudadanos[]
   Cuarentenas               Cuarentenas[]
   Defunciones               Defunciones[]
+  Cremaciones               Cremaciones[]
 
   @@index([rol_id])
   @@index([estatus_usuario])
@@ -522,9 +523,11 @@ model Cremaciones {
   duracion             String
   entrega_cenizas      String
   observaciones        String
+  registrado_por       String   @db.Uuid
 
   // Relaciones
   Defuncion Defunciones @relation(fields: [defuncion_id], references: [defuncion_id])
+  Usuarios  Usuarios    @relation(fields: [registrado_por], references: [usuario_id])
 }
 
 model Esterilizaciones {
