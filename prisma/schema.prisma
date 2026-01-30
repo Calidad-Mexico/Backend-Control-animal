@@ -391,12 +391,12 @@ model Adopciones {
   adoptante_id     String   @db.Uuid
   fecha_solicitud  DateTime
   estatus_adopcion String
-  evaluador_id     String   @db.Uuid
+  evaluador_id     String?  @db.Uuid
 
   // Relaciones
   Animal                 Animales                  @relation(fields: [animal_id], references: [animal_id])
   Adoptante              Propietario               @relation(fields: [adoptante_id], references: [propietario_id])
-  Usuarios               Usuarios                  @relation(fields: [evaluador_id], references: [usuario_id])
+  Usuarios               Usuarios?                 @relation(fields: [evaluador_id], references: [usuario_id])
   Seguimiento_Adopciones Seguimientos_Adopciones[]
 }
 

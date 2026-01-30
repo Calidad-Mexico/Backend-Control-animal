@@ -327,15 +327,12 @@ const createAdoptionRequest = async (req, res) => {
         email,
         telefono,
         colonia,
-        estatus_propietario,
-        // Datos de la solicitud
-        evaluador_id
+        estatus_propietario
     } = req.body;
 
-    // Validación de campos requeridos
-    if (!animal_id || !evaluador_id) {
+    if (!animal_id) {
         return res.status(400).json({
-            message: "Faltan campos requeridos: animal_id, evaluador_id"
+            message: "Falta el campo requerido: animal_id"
         });
     }
 
@@ -358,15 +355,6 @@ const createAdoptionRequest = async (req, res) => {
 
             if (!animal.es_adoptable) {
                 throw new Error('El animal no está disponible para adopción');
-            }
-
-            // Verificar que el evaluador existe
-            const evaluador = await tx.usuarios.findUnique({
-                where: { usuario_id: evaluador_id }
-            });
-
-            if (!evaluador) {
-                throw new Error('El evaluador no existe');
             }
 
             // Buscar o crear el propietario
@@ -426,7 +414,7 @@ const createAdoptionRequest = async (req, res) => {
             // Generar folio para la solicitud
             const folioAdopcion = await generateFolio("ADP");
 
-            // Crear la solicitud de adopción
+            // Crear la solicitud de adopción (sin evaluador, se asignará en el update)
             const solicitud = await tx.adopciones.create({
                 data: {
                     folio_adopcion: folioAdopcion,
@@ -434,7 +422,7 @@ const createAdoptionRequest = async (req, res) => {
                     adoptante_id: propietario.propietario_id,
                     fecha_solicitud: new Date(),
                     estatus_adopcion: 'Pendiente',
-                    evaluador_id: evaluador_id
+                    evaluador_id: null
                 },
                 include: {
                     Animal: {
@@ -481,7 +469,7 @@ const createAdoptionRequest = async (req, res) => {
         }
         if (error.code === "P2003") {
             return res.status(400).json({
-                message: "El animal o evaluador no existe"
+                message: "El animal no existe"
             });
         }
 
@@ -518,9 +506,9 @@ const updateAdoptionStatus = async (req, res) => {
         });
     }
 
-    if (estatus_adopcion === 'Aprobada' && !aprobado_por) {
+    if ((estatus_adopcion === 'Aprobada' || estatus_adopcion === 'Rechazada') && !aprobado_por) {
         return res.status(400).json({
-            message: "El ID del usuario que aprueba es requerido"
+            message: "El ID del usuario evaluador es requerido para aprobar o rechazar"
         });
     }
 
@@ -543,29 +531,38 @@ const updateAdoptionStatus = async (req, res) => {
                 throw new Error(`La solicitud ya fue ${solicitud.estatus_adopcion}`);
             }
 
-            // Si se aprueba, verificar que el usuario que aprueba existe
-            if (estatus_adopcion === 'Aprobada') {
-                const aprobador = await tx.usuarios.findUnique({
+            // Si se aprueba o rechaza, verificar que el usuario evaluador existe
+            if (estatus_adopcion === 'Aprobada' || estatus_adopcion === 'Rechazada') {
+                const evaluador = await tx.usuarios.findUnique({
                     where: { usuario_id: aprobado_por }
                 });
 
-                if (!aprobador) {
-                    throw new Error('El usuario que aprueba no existe');
+                if (!evaluador) {
+                    throw new Error('El usuario evaluador no existe');
                 }
+            }
 
-                // Verificar que el animal sigue siendo adoptable
+            // Si se aprueba, verificar que el animal sigue siendo adoptable
+            if (estatus_adopcion === 'Aprobada') {
                 if (!solicitud.Animal.es_adoptable) {
                     throw new Error('El animal ya no está disponible para adopción');
                 }
             }
 
             // Actualizar el estatus de la solicitud
+            // El evaluador se establece cuando se aprueba o rechaza
+            const dataUpdate = {
+                estatus_adopcion: estatus_adopcion
+            };
+
+            // Si se aprueba o rechaza, establecer el evaluador
+            if (estatus_adopcion === 'Aprobada' || estatus_adopcion === 'Rechazada') {
+                dataUpdate.evaluador_id = aprobado_por;
+            }
+
             const solicitudActualizada = await tx.adopciones.update({
                 where: { adopcion_id: Number(id) },
-                data: {
-                    estatus_adopcion: estatus_adopcion,
-                    evaluador_id: estatus_adopcion === 'Aprobada' ? aprobado_por : solicitud.evaluador_id
-                },
+                data: dataUpdate,
                 include: {
                     Animal: {
                         select: {
