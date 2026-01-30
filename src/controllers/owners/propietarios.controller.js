@@ -52,7 +52,7 @@ const getPropietarioById = async (req, res) => {
     const terms = search.split(" ").filter(Boolean);
 
     try {
-        const propietario = await prisma.propietario.findFirst({
+        const propietario = await prisma.propietario.findMany({
             where: {
                 AND: terms.map(term => ({
                     OR: [

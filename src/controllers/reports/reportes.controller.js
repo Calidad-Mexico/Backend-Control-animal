@@ -72,7 +72,10 @@ const createReporte = async (req, res) => {
             data: reportData,
         });
 
+        console.log(reporte)
+
         if (!reporte) {
+            console.log("Paso por el fallback")
             return res.status(404).json({ message: "No se pudo generar el reporte" })
         }
 
