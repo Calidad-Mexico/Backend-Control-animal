@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_DEV")
 }
 
 model Usuarios {
@@ -38,6 +38,7 @@ model Usuarios {
   Reporte_Seguimiento       Reporte_Seguimiento[]
   Reporte_Ciudadano         Reportes_Ciudadanos[]
   Cuarentenas               Cuarentenas[]
+  Defunciones               Defunciones[]
 
   @@index([rol_id])
   @@index([estatus_usuario])
@@ -492,13 +493,19 @@ model Pagos_Servicios {
 }
 
 model Defunciones {
-  defuncion_id         Int      @id @default(autoincrement())
-  animal_id            Int
-  fecha_hora_defuncion DateTime
-  causa_muerte         String
+  defuncion_id            Int      @id @default(autoincrement())
+  animal_id               Int
+  fecha_hora_defuncion    DateTime
+  lugar_defuncion         String
+  causa_muerte            String
+  autopsia                Boolean
+  disposicion_cadaver     String
+  observaciones           String
+  veterinario_responsable String   @db.Uuid
 
   // Relaciones
   Animal      Animales      @relation(fields: [animal_id], references: [animal_id])
+  Usuarios    Usuarios      @relation(fields: [veterinario_responsable], references: [usuario_id])
   Cremaciones Cremaciones[]
 }
 

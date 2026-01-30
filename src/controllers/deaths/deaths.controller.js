@@ -44,10 +44,10 @@ const createDeaths = async (req, res) => {
         fecha_hora_defuncion,
         lugar_defuncion,
         causa_muerte,
-        veterinario_responsable,
         autopsia,
         disposicion_cadaver,
-        observaciones
+        observaciones,
+        veterinario_responsable
     } = req.body
 
     const booleanAutopsia = autopsia === true || autopsia === "true";
@@ -72,7 +72,7 @@ const createDeaths = async (req, res) => {
             return res.status(404).json({ message: "no se pudo crear la cremacion" })
         }
 
-        return res.status(201).json({ message: "Cremacion creada exitosamente", death })
+        return res.status(201).json({ message: "Defuncion creada exitosamente", death })
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
