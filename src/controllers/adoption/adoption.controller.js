@@ -78,7 +78,7 @@ const createAdoption = async (req,res) => {
                     folio_adopcion: folio,
                     fecha_solicitud: new Date(fecha_adopcion),
                     estatus_adopcion: "Aprobada",
-                    costo_adopcion,
+                    costo_adopcion: Number(costo_adopcion),
                     Animal: { connect: { animal_id: Number(animal_id) } },
                     Adoptante: { connect: { propietario_id: adoptante_id } },
                     Usuarios: { connect: { usuario_id: evaluador_id } }
