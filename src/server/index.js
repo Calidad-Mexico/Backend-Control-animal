@@ -37,7 +37,8 @@ const corsOptions = {
         "http://10.10.250.31:3040",
         "http://10.10.250.31:8080",
         "http://10.10.250.31:8090",
-        "https://sica-roan.vercel.app"
+        "https://sica-roan.vercel.app",
+        "http://10.10.250.31:3060"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
