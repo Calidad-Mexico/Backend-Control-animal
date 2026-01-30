@@ -18,7 +18,7 @@ const getConsultations = async (req, res) => {
                         usuario_id: true,
                         nombre_completo: true
                     }
-                }
+                },
             }
         });
 
