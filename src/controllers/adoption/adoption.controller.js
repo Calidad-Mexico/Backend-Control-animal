@@ -61,6 +61,14 @@ const createAdoption = async (req,res) => {
     try {
         const result = await prisma.$transaction(async (tx) => {
 
+            const animal = await tx.adopciones.findUnique({
+                where: {
+                    animal_id: Number(animal_id)
+                }
+            })
+
+            if (animal) throw new Error("El animal ya esta adoptado")
+
             const adoptante = await tx.propietario.findUnique({
                 where: { propietario_id: adoptante_id }
             })

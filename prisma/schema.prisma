@@ -389,7 +389,7 @@ model Egresos_Animales {
 model Adopciones {
   adopcion_id      Int      @id @default(autoincrement())
   folio_adopcion   String   @unique
-  animal_id        Int
+  animal_id        Int      @unique
   adoptante_id     String   @db.Uuid
   fecha_solicitud  DateTime
   estatus_adopcion String
