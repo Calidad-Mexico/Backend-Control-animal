@@ -8,7 +8,7 @@ const getAllReportes = async (req, res) => {
                 fecha_reporte: "desc"
             },
             include: {
-
+                Usuario: true
             }
         });
 
