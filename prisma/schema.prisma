@@ -512,12 +512,16 @@ model Defunciones {
 }
 
 model Cremaciones {
-  cremacion_id            Int      @id @default(autoincrement())
-  folio_cremacion         String   @unique
-  defuncion_id            Int
-  tipo_servicio_cremacion String
-  fecha_recepcion         DateTime
-  estatus_cremacion       String
+  cremacion_id         Int      @id @default(autoincrement())
+  folio_cremacion      String   @unique
+  defuncion_id         Int
+  fecha_hora_cremacion DateTime
+  peso_corporal        String
+  operador_horno       String
+  temperatura          String
+  duracion             String
+  entrega_cenizas      String
+  observaciones        String
 
   // Relaciones
   Defuncion Defunciones @relation(fields: [defuncion_id], references: [defuncion_id])

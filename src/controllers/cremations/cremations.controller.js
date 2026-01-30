@@ -44,8 +44,7 @@ const createCremation = async (req, res) => {
     const {
         defuncion_id,
         fecha_hora_cremacion,
-        numero_cremacion,
-        peso,
+        peso_corporal,
         operador_horno,
         temperatura,
         duracion,
@@ -56,13 +55,13 @@ const createCremation = async (req, res) => {
     const cremationFolio = await generateFolio("CRM")
 
     const cremationsData = {
+        folio_cremacion: cremationFolio,
         defuncion_id: Number(defuncion_id),
         fecha_hora_cremacion: new Date(fecha_hora_cremacion),
-        numero_cremacion: cremationFolio,
-        peso,
+        peso_corporal,
         operador_horno,
         temperatura,
-        duracion: Number(duracion),
+        duracion,
         entrega_cenizas,
         observaciones
     }
