@@ -138,6 +138,8 @@ model Animales {
   sexo             String?
   observaciones    String?
   estado_reproductivo String?
+  temperamento String?
+  tiempo_estancia String?
 
   // Modelo animal 2
   fecha_hora_ingreso        DateTime?
