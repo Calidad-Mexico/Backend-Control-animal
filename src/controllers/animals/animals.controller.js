@@ -79,6 +79,7 @@ const createAnimal = async (req, res) => {
             fecha_ingreso,
             es_adoptable,
             registrado_por,
+            estado_reproductivo
         } = req.body;
 
         // Validar relacion con el usuario que lo crea
@@ -114,6 +115,7 @@ const createAnimal = async (req, res) => {
                 fecha_ingreso,
                 es_adoptable: booleanAdoptable,
                 registrado_por,
+                estado_reproductivo
             },
         });
 
@@ -167,7 +169,8 @@ const createAnimalFlujo = async (req, res) => {
         telefono,
         correo,
         relacion_animal,
-        registrado_por
+        registrado_por,
+        estado_reproductivo
     } = req.body;
 
     // Objeto del animal
@@ -187,7 +190,8 @@ const createAnimalFlujo = async (req, res) => {
         telefono,
         correo,
         relacion_animal,
-        registrado_por
+        registrado_por,
+        estado_reproductivo
     }
 
     try {
