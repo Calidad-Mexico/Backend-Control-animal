@@ -64,7 +64,8 @@ const createVaccination = async (req, res) => {
                     ? new Date(proxima_dosis)
                     : null,
                 observaciones: observaciones || "",
-                veterinario_Id
+                veterinario_Id,
+                zona
             }
         });
 
