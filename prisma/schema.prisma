@@ -212,6 +212,7 @@ model Propietario {
   telefono              String
   colonia               String
   estatus_propietario   String
+  motivo                String?
 
   // Relaciones
   Adopciones                      Adopciones[]
